@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Building Supplier ETA and Process</title>
+    <style>
+        /* Add some basic styling for the list */
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ccc;
+            padding: 5px 0;
+        }
+
+        /* Style for the filter input fields */
+        .filter-input {
+            margin-bottom: 10px;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Building Supplier ETA and Process</h1>
+
+<!-- Filter input fields -->
+<input type="text" id="filter-name" class="filter-input" placeholder="Filter by name...">
+<input type="text" id="filter-email" class="filter-input" placeholder="Filter by email...">
+
+<!-- The list itself -->
+<ul id="list">
+    <!-- Your list items will go here, see the JavaScript example below -->
+</ul>
+
+<!-- Include JavaScript for filtering functionality -->
+<script>
+    // Get the list and filter input fields
+    const list = document.getElementById('list');
+    const nameFilter = document.getElementById('filter-name');
+    const emailFilter = document.getElementById('filter-email');
+
+    // Sample data (you should replace this with actual data)
+    const data = [
+        { name: 'Arbon Equipment Corp / Rite Hite', email: 'rstrunk1@ritehite.com' },
+        { name: 'ASI Doors Inc', email: 'parts@asidoors.com' },
+        { name: 'Arbon Equipment Corp / Rite Hite', email: 'rstrunk1@ritehite.com' },
+        { name: 'ASI Doors Inc', email: 'parts@asidoors.com' },
+        { name: 'CH20 Inc', email: 'orders@ch20.com' },
+        { name: 'CSS Polymers, Inc.', email: 'tara@csspolymersinc.com' },
+        { name: 'Frank Door Company', email: 'jdurling@frankdoor.com' },
+        { name: 'Miner Ltd', email: 'adam.john@minercorp.com' },
+        { name: 'Motion Industries Inc', email: 'Mike.Nath@motion-ind.com' },
+        { name: 'Rytec Corporation', email: 'JBohman@rytecdoors.com' },
+        { name: 'Senneca Holdings', email: 'JShelton@Senneca.com' },
+        { name: 'Shorr Packaging Corp', email: 'trish.clingan@shorr.com' },
+        { name: 'Southern Dock Products', email: 'grelick@southerndock.com' },
+        { name: 'Systems Inc', email: 'techservices@loading docksystems.com' },
+        { name: 'Trans-Heat LLC', email: 'chad@trans-heat.com' },
+        { name: 'World Manufacturing Inc', email: 'yalinda@worldmanufacturing.com' },
+    ];
+
+    // Create list items from the data
+    const listItems = data.map(item => {
+        const li = document.createElement('li');
+        li.innerHTML = `<strong>${item.name}</strong> - ${item.email}`;
+        return li;
+    });
+
+    // Add list items to the list
+    list.append(...listItems);
+
+    // Filter the list based on input from the filter fields
+    function filterList() {
+        const nameFilterText = nameFilter.value.toLowerCase();
+        const emailFilterText = emailFilter.value.toLowerCase();
+
+        listItems.forEach(item => {
+            const name = item.innerText.split('-')[0].trim().toLowerCase();
+            const email = item.innerText.split('-')[1].trim().toLowerCase();
+
+            if ((name.includes(nameFilterText) || nameFilterText === '') && (email.includes(emailFilterText) || emailFilterText === '')) {
+                item.style.display = '';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
+
+    // Listen for input on the filter fields and filter the list
+    nameFilter.addEventListener('input', filterList);
+    emailFilter.addEventListener('input', filterList);
+
+    // Filter the list when the page loads
+    window.addEventListener('load', filterList);
+</script>
+
+</body>
+</html>

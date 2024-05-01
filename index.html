@@ -1,103 +1,822 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Building Supplier ETA and Process</title>
-    <style>
-        /* Add some basic styling for the list */
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
+<h1><span style="font-size: xx-large;"><strong>Varis Support Page</strong></span></h1>
+<p><span style="font-size: medium;">Below you will find information to Create Returns &amp; Track Orders as well as an FAQ Section with Training Guides and Videos. If you have any questions not answered in this page, please reach out to <a href="mailto:purchasing@onelineage.com">purchasing@onelineage.com</a></span></p>
+<p>&nbsp;<strong style="font-size: 1.5em;"><span style="font-size: 1.5em;">Create Returns &amp; Track Orders</span></strong></p>
+<table style="width: 532px;" border="0" frame="border" cellpadding="10">
+<tbody>
+<tr align="center" valign="middle">
+<td style="border-color: #000000; border-style: solid; border-width: 1px; text-align: center;"><span style="text-decoration: underline;"><span style="font-size: large;"><strong>Supplier</strong></span></span></td>
+<td style="border-color: #000000; border-style: solid; border-width: 1px; text-align: center;"><span style="text-decoration: underline;"><span style="font-size: large;"><strong>ETA &amp; Returns Process</strong></span></span></td>
+</tr>
+<tr align="center" valign="middle">
+<td style="border-color: #000000; border-style: solid; border-width: 1px;">
+<p><span style="font-size: medium;"><br /></span></p>
+<p style="text-align: center;"><span style="font-size: medium;">ODP</span></p>
+<p><span style="font-size: medium;"><br /></span></p>
+</td>
+<td style="border-color: #000000; border-style: solid; border-width: 1px; text-align: center;">
+<p><a href="https://lineage.uat.govaris.com/punchoutclient/transactions/punchoutrequest/conn_id/13/" target="_blank"><img style="vertical-align: middle;" src="https://bw-media.s3.amazonaws.com/vuat-lineage-bb24/Lineage+Tracking+Graphic+II.png" alt="" width="250" height="100" /></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
 
-        li {
-            margin-bottom: 10px;
-            border-bottom: 1px solid #ccc;
-            padding: 5px 0;
-        }
-
-        /* Style for the filter input fields */
-        .filter-input {
-            margin-bottom: 10px;
-            padding: 5px;
-        }
-    </style>
-</head>
-<body>
-
-<h1>Building Supplier ETA and Process</h1>
-
-<!-- Filter input fields -->
-<input type="text" id="filter-name" class="filter-input" placeholder="Filter by name...">
-<input type="text" id="filter-email" class="filter-input" placeholder="Filter by email...">
-
-<!-- The list itself -->
-<ul id="list">
-    <!-- Your list items will go here, see the JavaScript example below -->
-</ul>
-
-<!-- Include JavaScript for filtering functionality -->
 <script>
-    // Get the list and filter input fields
-    const list = document.getElementById('list');
-    const nameFilter = document.getElementById('filter-name');
-    const emailFilter = document.getElementById('filter-email');
+function filterTable(inputElement) {
+  var filter, table, tr, td, i, txtValue;
+  filter = inputElement.value.toLowerCase();
+  table = inputElement.parentElement.nextElementSibling; // Get the next sibling table element
+  tr = table.getElementsByTagName("tr");
 
-    // Sample data (you should replace this with actual data)
-    const data = [
-        { name: 'Arbon Equipment Corp / Rite Hite', email: 'rstrunk1@ritehite.com' },
-        { name: 'ASI Doors Inc', email: 'parts@asidoors.com' },
-        { name: 'Arbon Equipment Corp / Rite Hite', email: 'rstrunk1@ritehite.com' },
-        { name: 'ASI Doors Inc', email: 'parts@asidoors.com' },
-        { name: 'CH20 Inc', email: 'orders@ch20.com' },
-        { name: 'CSS Polymers, Inc.', email: 'tara@csspolymersinc.com' },
-        { name: 'Frank Door Company', email: 'jdurling@frankdoor.com' },
-        { name: 'Miner Ltd', email: 'adam.john@minercorp.com' },
-        { name: 'Motion Industries Inc', email: 'Mike.Nath@motion-ind.com' },
-        { name: 'Rytec Corporation', email: 'JBohman@rytecdoors.com' },
-        { name: 'Senneca Holdings', email: 'JShelton@Senneca.com' },
-        { name: 'Shorr Packaging Corp', email: 'trish.clingan@shorr.com' },
-        { name: 'Southern Dock Products', email: 'grelick@southerndock.com' },
-        { name: 'Systems Inc', email: 'techservices@loading docksystems.com' },
-        { name: 'Trans-Heat LLC', email: 'chad@trans-heat.com' },
-        { name: 'World Manufacturing Inc', email: 'yalinda@worldmanufacturing.com' },
-    ];
+  // Loop through all table rows (except the header row)
+  for (i = 1; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td"); // Get all table cells in the current row
+    var rowContainsFilter = false; // Flag to check if the row should be hidden
 
-    // Create list items from the data
-    const listItems = data.map(item => {
-        const li = document.createElement('li');
-        li.innerHTML = `<strong>${item.name}</strong> - ${item.email}`;
-        return li;
-    });
-
-    // Add list items to the list
-    list.append(...listItems);
-
-    // Filter the list based on input from the filter fields
-    function filterList() {
-        const nameFilterText = nameFilter.value.toLowerCase();
-        const emailFilterText = emailFilter.value.toLowerCase();
-
-        listItems.forEach(item => {
-            const name = item.innerText.split('-')[0].trim().toLowerCase();
-            const email = item.innerText.split('-')[1].trim().toLowerCase();
-
-            if ((name.includes(nameFilterText) || nameFilterText === '') && (email.includes(emailFilterText) || emailFilterText === '')) {
-                item.style.display = '';
-            } else {
-                item.style.display = 'none';
-            }
-        });
+    // Check both columns for filter match
+    for (var j = 0; j < td.length; j++) {
+      txtValue = td[j].textContent || td[j].innerText;
+      if (txtValue.toLowerCase().indexOf(filter) > -1) {
+        rowContainsFilter = true;
+        break; // Exit inner loop if filter found in a column
+      }
     }
 
-    // Listen for input on the filter fields and filter the list
-    nameFilter.addEventListener('input', filterList);
-    emailFilter.addEventListener('input', filterList);
-
-    // Filter the list when the page loads
-    window.addEventListener('load', filterList);
+    if (rowContainsFilter) {
+      tr[i].style.display = "";
+    } else {
+      tr[i].style.display = "none";
+    }
+  }
+}
 </script>
 
-</body>
-</html>
+<p><span style="font-size: x-large;"><strong>Building</strong></span></p>
+<div>
+    <input type="text" id="filterSupplier" onkeyup="filterTable(this)" placeholder="Type the supplier name or email to filter">
+</div>
+
+<table style="width: 800px; border-color: #000000; border-width: 1px; border-style: solid;" border="1" frame="border" cellspacing="5" cellpadding="0"><colgroup><col width="213" /> <col width="258" /> </colgroup>
+<tbody>
+<tr>
+<td class="xl66" style="text-align: center;" width="213" height="19"><strong><span style="text-decoration: underline;"><span style="font-size: large;">Supplier</span></span></strong></td>
+<td class="xl66" style="text-align: center;" width="258"><strong><span style="text-decoration: underline;"><span style="font-size: large;">ETA and Process</span></span></strong></td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Arbon Equipment Corp/Rite Hite</td>
+<td class="xl66" style="text-align: center;">rstrunk1@ritehite.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">ASI Doors Inc</td>
+<td class="xl66" style="text-align: center;">parts@asidoors.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">CH20 Inc</td>
+<td class="xl66" style="text-align: center;">orders@ch2O.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">CSS Polymers, Inc.</td>
+<td class="xl66" style="text-align: center;">tara@csspolymersinc.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Frank Door Company</td>
+<td class="xl66" style="text-align: center;">jdurling@frankdoor.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Miner Ltd</td>
+<td class="xl66" style="text-align: center;">adam.john@minercorp.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Motion Industries Inc</td>
+<td class="xl66" style="text-align: center;">Mike.Nath@motion-ind.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Rytec Corporation</td>
+<td class="xl66" style="text-align: center;">JBohman@rytecdoors.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Senneca Holdings</td>
+<td class="xl66" style="text-align: center;">JShelton@Senneca.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Shorr Packaging Corp</td>
+<td class="xl66" style="text-align: center;">trish.clingan@shorr.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Southern Dock Products</td>
+<td class="xl66" style="text-align: center;">grelick@southerndock.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Systems Inc</td>
+<td class="xl66" style="text-align: center;">techservices@loadingdocksystems.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Trans-Heat LLC</td>
+<td class="xl66" style="text-align: center;">chad@trans-heat.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">World Manufacturing Inc</td>
+<td class="xl66" style="text-align: center;">yalinda@worldmanufacturing.com</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p><strong><span style="font-size: x-large;">Cleaning Supplies</span></strong></p>
+<div>
+    <input type="text" id="filterSupplier" onkeyup="filterTable(this)" placeholder="Type the supplier name or email to filter">
+</div>
+<table style="width: 800px; border-color: #000000; border-width: 1px; border-style: solid;" border="1" frame="border" cellspacing="5" cellpadding="0"><colgroup><col width="267" /> <col width="288" /> </colgroup>
+<tbody>
+<tr>
+<td class="xl66" style="text-align: center;" width="267" height="19"><span style="text-decoration: underline; font-size: large;"><strong>Supplier</strong></span></td>
+<td class="xl66" style="text-align: center;" width="288"><span style="text-decoration: underline; font-size: large;"><strong>ETA and Process</strong></span></td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="18">Bunzl Processor Division</td>
+<td class="xl66" style="text-align: center;">kochsupplies@bunzlusa.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">ChemStation Philadelphia</td>
+<td class="xl66" style="text-align: center;">JAversa@chemstation.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Ecolab</td>
+<td class="xl66" style="text-align: center;">John.Oliver@ecolab.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Ecolab Food Safety Specialties Inc</td>
+<td class="xl66" style="text-align: center;">John.Oliver@ecolab.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Hantover Inc</td>
+<td class="xl66" style="text-align: center;">contactus@hantover.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">KC Quality Products, Inc.</td>
+<td class="xl66" style="text-align: center;">kcquality08@att.net</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Meyer Laboratory Inc</td>
+<td class="xl66" style="text-align: center;">salesorder@meyerlab.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Minuteman International and PowerBoss</td>
+<td class="xl66" style="text-align: center;">customerservice@minutemanintl.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Supplyworks</td>
+<td class="xl66" style="text-align: center;">jessica_joyce@homedepot.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Uline Inc</td>
+<td class="xl66" style="text-align: center;">customer.service@uline.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Zep Sales &amp; Service</td>
+<td class="xl66" style="text-align: center;">Wendell.Brenner@zep.com</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p><strong><span style="font-size: x-large;">Electrical, Warehouse and Packaging Supplies</span></strong></p>
+<div>
+    <input type="text" id="filterSupplier" onkeyup="filterTable(this)" placeholder="Type the supplier name or email to filter">
+</div>
+<table style="width: 800px; border-color: #000000; border-width: 1px; border-style: solid;" border="1" frame="border" cellspacing="5" cellpadding="0"><colgroup><col width="267" /> <col width="288" /> </colgroup>
+<tbody>
+<tr>
+<td class="xl66" style="text-align: center;" width="267" height="19"><span style="text-decoration: underline;"><strong><span style="font-size: large;">Supplier</span></strong></span></td>
+<td class="xl66" style="text-align: center;" width="288"><span style="text-decoration: underline;"><strong><span style="font-size: large;">ETA and Process</span></strong></span></td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Acorn Sales Company Inc</td>
+<td class="xl67" style="text-align: center;">holly@acornsales.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Air Filters Engineers</td>
+<td class="xl67" style="text-align: center;">robert@filterexperts.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Ambrose Packaging Inc</td>
+<td class="xl67" style="text-align: center;">kacasys@ambroseco.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Angleboard</td>
+<td class="xl67" style="text-align: center;">lfaye@angleboard.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Bunzl Processor Division</td>
+<td class="xl67" style="text-align: center;">kochsupplies@bunzlusa.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Cargo Data Company</td>
+<td class="xl67" style="text-align: center;">orders@cargodatacorp.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">CDW Direct LLC</td>
+<td class="xl67" style="text-align: center;">tommcge@cdw.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Cellofoam</td>
+<td class="xl67" style="text-align: center;">BPVA@CELLOFOAMNA.COM</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Cintas</td>
+<td class="xl67" style="text-align: center;">Carly Hanna</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Copeland Cold Chain LP</td>
+<td class="xl67" style="text-align: center;">CargoOrders@copeland.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Cryopak Verification Technologies, Inc</td>
+<td class="xl67" style="text-align: center;">kbrande@cryopak.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Deltatrak Inc</td>
+<td class="xl67" style="text-align: center;">orderprocessing@deltatrak.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Diagraph Snyder Inc</td>
+<td class="xl67" style="text-align: center;">sales@diagraphsnyder.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Ecolab Food Safety Specialties Inc</td>
+<td class="xl67" style="text-align: center;">John.Oliver@ecolab.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Emedco Inc</td>
+<td class="xl67" style="text-align: center;">matthew_torgalski@emedco.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">General Air Products</td>
+<td class="xl67" style="text-align: center;">orders@generalairproducts.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Global Equipment Company Inc</td>
+<td class="xl67" style="text-align: center;">tbryant@globalindustrial.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Hantover Inc</td>
+<td class="xl67" style="text-align: center;">contactus@hantover.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Heartland Computers Inc</td>
+<td class="xl67" style="text-align: center;">stacy@heartland-usa.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Hill Manufacturing Company</td>
+<td class="xl67" style="text-align: center;">sales@hillmfg.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Hood Container Corporation</td>
+<td class="xl67" style="text-align: center;">stephanie.slate@hoodcontainer.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">ID Wholesaler</td>
+<td class="xl67" style="text-align: center;">markn@idwholesaler.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Industrial Labeling Systems Inc</td>
+<td class="xl67" style="text-align: center;">kmeyer@e-ilsi.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">JDL Packaging Systems Inc</td>
+<td class="xl67" style="text-align: center;">rossl@jdlpackaging.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Logic Technologies, Inc.</td>
+<td class="xl67" style="text-align: center;">ksmith@logictechnologies.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Motion Industries Inc</td>
+<td class="xl67" style="text-align: center;">Mike.Nath@motion-ind.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">PDM Distribution Services, Inc.</td>
+<td class="xl67" style="text-align: center;">Jason.mcguire@pdmcompany.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Plastilite Corporation</td>
+<td class="xl67" style="text-align: center;">ORDERS@PLASTILITE.COM</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Procuro Inc</td>
+<td class="xl67" style="text-align: center;">orders@procuro.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">QUICK TUBE SYSTEMS INC.</td>
+<td class="xl67" style="text-align: center;">service@quicktubesystems.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Rochester Magnet Co</td>
+<td class="xl67" style="text-align: center;">Jill@rochestermagnet.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Sensitech Inc</td>
+<td class="xl67" style="text-align: center;">clientservices@sensitech.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Shorr Packaging Corp</td>
+<td class="xl67" style="text-align: center;">trish.clingan@shorr.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Sigma Supply of N.A. Inc</td>
+<td class="xl67" style="text-align: center;">DStewart@sigmasupply.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Skyline Sales Inc</td>
+<td class="xl67" style="text-align: center;">Tommy.Stephano@skylinesalesinc.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Supplyworks</td>
+<td class="xl67" style="text-align: center;">jessica_joyce@homedepot.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Taylor Corporation</td>
+<td class="xl67" style="text-align: center;">CountOnTaylor@taylorcommunications.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">TempTRIP LLC</td>
+<td class="xl67" style="text-align: center;">support@temptrip.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">TydenBrooks</td>
+<td class="xl67" style="text-align: center;">orderentry@tydenbrooks.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Uline Inc</td>
+<td class="xl67" style="text-align: center;">customer.service@uline.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">United States Plastic Corporation</td>
+<td class="xl67" style="text-align: center;">usp@usplastic.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Veritiv Operating Company</td>
+<td class="xl67" style="text-align: center;">VeritivPartsandService4@Veritivcorp.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Zep Sales &amp; Service</td>
+<td class="xl67" style="text-align: center;">Wendell.Brenner@zep.com</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p><strong><span style="font-size: x-large;">Freezer Wear</span></strong></p>
+<div>
+    <input type="text" id="filterSupplier" onkeyup="filterTable(this)" placeholder="Type the supplier name or email to filter">
+</div>
+<table style="width: 800px; border-color: #000000; border-width: 1px; border-style: solid;" border="1" frame="border" cellspacing="5" cellpadding="0"><colgroup><col width="160" /> <col width="190" /> </colgroup>
+<tbody>
+<tr>
+<td class="xl66" style="text-align: center;" width="160" height="19"><span style="text-decoration: underline;"><strong><span style="font-size: large;">Supplier</span></strong></span></td>
+<td class="xl66" style="text-align: center;" width="190"><span style="text-decoration: underline;"><strong><span style="font-size: large;">ETA and Process</span></strong></span></td>
+</tr>
+<tr>
+<td class="xl67" style="text-align: center;" height="19">Bunzl Processor Division</td>
+<td class="xl67" style="text-align: center;">kochsupplies@bunzlusa.com</td>
+</tr>
+<tr>
+<td class="xl67" style="text-align: center;" height="19">Hantover Inc</td>
+<td class="xl67" style="text-align: center;">contactus@hantover.com</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p><span style="font-size: x-large;"><strong>IT&nbsp;</strong></span></p>
+<div>
+    <input type="text" id="filterSupplier" onkeyup="filterTable(this)" placeholder="Type the supplier name or email to filter">
+</div>
+<table style="width: 800px; border-color: #000000; border-width: 1px; border-style: solid;" border="1" frame="border" cellspacing="5" cellpadding="0"><colgroup><col width="200" /> <col width="209" /> </colgroup>
+<tbody>
+<tr>
+<td class="xl66" style="text-align: center;" width="200" height="19"><span style="text-decoration: underline;"><strong><span style="font-size: large;">Supplier</span></strong></span></td>
+<td class="xl66" style="text-align: center;" width="209"><span style="text-decoration: underline;"><strong><span style="font-size: large;">ETA and Process</span></strong></span></td>
+</tr>
+<tr>
+<td class="xl67" style="text-align: center;" height="19">CDW Direct LLC</td>
+<td class="xl67" style="text-align: center;">tommcge@cdw.com</td>
+</tr>
+<tr>
+<td class="xl67" style="text-align: center;" height="19">Heartland Computers Inc</td>
+<td class="xl67" style="text-align: center;">stacy@heartland-usa.com</td>
+</tr>
+<tr>
+<td class="xl67" style="text-align: center;" height="19">Industrial Labeling Systems Inc</td>
+<td class="xl67" style="text-align: center;">kmeyer@e-ilsi.com</td>
+</tr>
+<tr>
+<td class="xl67" style="text-align: center;" height="19">Mountain Leverage LLC</td>
+<td class="xl67" style="text-align: center;">orders@mountainleverage.com</td>
+</tr>
+</tbody>
+</table>
+<p><strong><span style="font-size: x-large;"><br /></span></strong></p>
+<p><strong><span style="font-size: x-large;">MHE</span></strong></p>
+<div>
+    <input type="text" id="filterSupplier" onkeyup="filterTable(this)" placeholder="Type the supplier name or email to filter">
+</div>
+<table style="width: 800px; border-color: #000000; border-width: 1px; border-style: solid;" border="1" cellspacing="5" cellpadding="0"><colgroup><col width="227" /> <col width="279" /> </colgroup>
+<tbody>
+<tr>
+<td class="xl66" style="text-align: center;" width="227" height="19"><strong><span style="text-decoration: underline;"><span style="font-size: large;">Supplier</span></span></strong></td>
+<td class="xl66" style="text-align: center;" width="279"><strong><span style="text-decoration: underline;"><span style="font-size: large;">ETA and Process</span></span></strong></td>
+</tr>
+<tr>
+<td class="xl67" style="text-align: center;" height="19">Briggs Equipment</td>
+<td class="xl67" style="text-align: center;">Parts.Support@BriggsEquipment.com</td>
+</tr>
+<tr>
+<td class="xl67" style="text-align: center;" height="19">Camco Lubricants</td>
+<td class="xl67" style="text-align: center;">danw@camcolubricants.com</td>
+</tr>
+<tr>
+<td class="xl67" style="text-align: center;" height="19">Cargo Data Company</td>
+<td class="xl67" style="text-align: center;">orders@cargodatacorp.com</td>
+</tr>
+<tr>
+<td class="xl67" style="text-align: center;" height="19">Carolina Handling LLC</td>
+<td class="xl67" style="text-align: center;">PartsConsignments@carolinahandling.com</td>
+</tr>
+<tr>
+<td class="xl67" style="text-align: center;" height="19">Cherry's Industrial Equipment Corp</td>
+<td class="xl67" style="text-align: center;">orderprocessing@cherrysind.com</td>
+</tr>
+<tr>
+<td class="xl67" style="text-align: center;" height="19">Deltatrak Inc</td>
+<td class="xl67" style="text-align: center;">orderprocessing@deltatrak.com</td>
+</tr>
+<tr>
+<td class="xl67" style="text-align: center;" height="19">Heartland Computers Inc</td>
+<td class="xl67" style="text-align: center;">stacy@heartland-usa.com</td>
+</tr>
+<tr>
+<td class="xl67" style="text-align: center;" height="18">Heubel Material Handling Inc</td>
+<td class="xl67" style="text-align: center;">Lineageorders@heubel.com</td>
+</tr>
+<tr>
+<td class="xl67" style="text-align: center;" height="19">Hyster Company</td>
+<td class="xl67" style="text-align: center;">Lineage@Hyster-Yale.com</td>
+</tr>
+<tr>
+<td class="xl67" style="text-align: center;" height="19">ID Wholesaler</td>
+<td class="xl67" style="text-align: center;">markn@idwholesaler.com</td>
+</tr>
+<tr>
+<td class="xl67" style="text-align: center;" height="19">Industrial Battery Products Inc</td>
+<td class="xl67" style="text-align: center;">greg.roberts@ibpmidwest.com</td>
+</tr>
+<tr>
+<td class="xl67" style="text-align: center;" height="19">Magnolia Lift Truck Parts Inc</td>
+<td class="xl67" style="text-align: center;">louisgates@magnolialift.com</td>
+</tr>
+<tr>
+<td class="xl67" style="text-align: center;" height="19">Motion Industries Inc</td>
+<td class="xl67" style="text-align: center;">Mike.Nath@motion-ind.com</td>
+</tr>
+<tr>
+<td class="xl67" style="text-align: center;" height="19">Motive Energy Inc</td>
+<td class="xl67" style="text-align: center;">ksinner@motive-energy.com</td>
+</tr>
+<tr>
+<td class="xl67" style="text-align: center;" height="19">Northwest Handling Systems, Inc.</td>
+<td class="xl67" style="text-align: center;">joeyst@nwhs.com</td>
+</tr>
+<tr>
+<td class="xl67" style="text-align: center;" height="19">Sackett Systems Inc</td>
+<td class="xl67" style="text-align: center;">millardref@sackett-systems.com</td>
+</tr>
+<tr>
+<td class="xl67" style="text-align: center;" height="19">Unique Lift Parts Inc</td>
+<td class="xl67" style="text-align: center;">sonny@uniqueliftparts.com</td>
+</tr>
+<tr>
+<td class="xl67" style="text-align: center;" height="19">Zep Sales &amp; Service</td>
+<td class="xl67" style="text-align: center;">Wendell.Brenner@zep.com</td>
+</tr>
+</tbody>
+</table>
+<p><strong><span style="font-size: x-large;"><br /></span></strong></p>
+<p><strong><span style="font-size: x-large;">MRO</span></strong></p>
+<div>
+    <input type="text" id="filterSupplier" onkeyup="filterTable(this)" placeholder="Type the supplier name or email to filter">
+</div>
+<table style="width: 800px; border-color: #000000; border-width: 1px; border-style: solid;" border="1" frame="border" cellspacing="5" cellpadding="0"><colgroup><col width="235" /> <col width="279" /> </colgroup>
+<tbody>
+<tr>
+<td class="xl66" style="text-align: center;" width="235" height="19"><span style="text-decoration: underline;"><strong><span style="font-size: large;">Supplier</span></strong></span></td>
+<td class="xl66" style="text-align: center;" width="279"><span style="text-decoration: underline;"><strong><span style="font-size: large;">ETA and Process</span></strong></span></td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Ambrose Packaging Inc</td>
+<td class="xl66" style="text-align: center;">kacasys@ambroseco.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Cintas</td>
+<td class="xl66" style="text-align: center;">Carly Hanna</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">First Wireless Inc</td>
+<td class="xl66" style="text-align: center;">bobs@firstwirelessinc.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Hiperbaric USA Corporation</td>
+<td class="xl66" style="text-align: center;">spares@hiperbaric.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">LTW INTRALOGISTICS</td>
+<td class="xl66" style="text-align: center;">Parts@LTWUSA.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">M&amp;M Refrigeration Inc</td>
+<td class="xl66" style="text-align: center;">shannons@mmsysinc.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Markem-Imaje Corporation</td>
+<td class="xl66" style="text-align: center;">USOrders@markem-imaje.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Miller Energy Inc</td>
+<td class="xl66" style="text-align: center;">cwentz@millerenergy.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Motion Industries Inc</td>
+<td class="xl66" style="text-align: center;">Mike.Nath@motion-ind.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Pearson Packaging Systems</td>
+<td class="xl66" style="text-align: center;">serviceparts@pearsonpkg.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Shorr Packaging Corp</td>
+<td class="xl66" style="text-align: center;">trish.clingan@shorr.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Stokes Material Handling System Inc</td>
+<td class="xl66" style="text-align: center;">hbwitt@stokesmhs.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">TG Technical Services LLC</td>
+<td class="xl66" style="text-align: center;">julia@tgtechservices.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Zep Sales &amp; Service</td>
+<td class="xl66" style="text-align: center;">Wendell.Brenner@zep.com</td>
+</tr>
+</tbody>
+</table>
+<p><strong><span style="font-size: x-large;"><br /></span></strong></p>
+<p><strong><span style="font-size: x-large;">Office Supplies</span></strong></p>
+<div>
+    <input type="text" id="filterSupplier" onkeyup="filterTable(this)" placeholder="Type the supplier name or email to filter">
+</div>
+<table style="width: 800px; border-color: #000000; border-width: 1px; border-style: solid;" border="1" frame="border" cellspacing="5" cellpadding="0"><colgroup><col width="235" /> <col width="279" /> </colgroup>
+<tbody>
+<tr>
+<td class="xl66" style="text-align: center;" width="235" height="19"><span style="text-decoration: underline; font-size: large;"><strong>Supplier</strong></span></td>
+<td class="xl66" style="text-align: center;" width="279"><span style="text-decoration: underline; font-size: large;"><strong>ETA and Process</strong></span></td>
+</tr>
+<tr>
+<td class="xl67" style="text-align: center;" height="19">Acom Solutions Inc</td>
+<td class="xl67" style="text-align: center;">ordersupplies@acom.com</td>
+</tr>
+<tr>
+<td class="xl67" style="text-align: center;" height="19">CDW Direct LLC</td>
+<td class="xl67" style="text-align: center;">tommcge@cdw.com</td>
+</tr>
+<tr>
+<td class="xl67" style="text-align: center;" height="19">EvergreenIDSystems</td>
+<td class="xl67" style="text-align: center;">sales@evergreenid.com</td>
+</tr>
+<tr>
+<td class="xl67" style="text-align: center;" height="19">Heartland Computers Inc</td>
+<td class="xl67" style="text-align: center;">stacy@heartland-usa.com</td>
+</tr>
+<tr>
+<td class="xl67" style="text-align: center;" height="19">Supplyworks</td>
+<td class="xl67" style="text-align: center;">jessica_joyce@homedepot.com</td>
+</tr>
+<tr>
+<td class="xl67" style="text-align: center;" height="19">Taylor Corporation</td>
+<td class="xl67" style="text-align: center;">CountOnTaylor@taylorcommunications.com</td>
+</tr>
+</tbody>
+</table>
+<p><strong><span style="font-size: x-large;"><br /></span></strong></p>
+<p><strong><span style="font-size: x-large;">Pallets</span></strong></p>
+<div>
+    <input type="text" id="filterSupplier" onkeyup="filterTable(this)" placeholder="Type the supplier name or email to filter">
+</div>
+<table style="width: 800px; border-color: #000000; border-width: 1px; border-style: solid;" border="1" frame="border" cellspacing="5" cellpadding="0"><colgroup><col width="235" /> <col width="279" /> </colgroup>
+<tbody>
+<tr>
+<td class="xl66" style="text-align: center;" width="235" height="19"><span style="text-decoration: underline;"><strong><span style="font-size: large;">Supplier</span></strong></span></td>
+<td class="xl66" style="text-align: center;" width="279"><span style="text-decoration: underline;"><strong><span style="font-size: large;">ETA and Process</span></strong></span></td>
+</tr>
+<tr>
+<td class="xl67" style="text-align: center;" height="19">48forty Solutions LLC</td>
+<td class="xl67" style="text-align: center;">john.hart@48forty.com</td>
+</tr>
+<tr>
+<td class="xl67" style="text-align: center;" height="19">Advance Pallet Inc</td>
+<td class="xl67" style="text-align: center;">egirman@advancepalletinc.com</td>
+</tr>
+<tr>
+<td class="xl67" style="text-align: center;" height="19">Alamo Pallets</td>
+<td class="xl67" style="text-align: center;">alamopallets@gmail.com</td>
+</tr>
+<tr>
+<td class="xl67" style="text-align: center;" height="19">Dandee Pallet &amp; Packaging Inc</td>
+<td class="xl67" style="text-align: center;">orders@dandeepkg.com</td>
+</tr>
+<tr>
+<td class="xl67" style="text-align: center;" height="19">Palletmaxx Inc</td>
+<td class="xl67" style="text-align: center;">declan@palletmaxx.com</td>
+</tr>
+<tr>
+<td class="xl67" style="text-align: center;" height="19">Premier Handling Solutions Inc</td>
+<td class="xl67" style="text-align: center;">jmalek@phsinc.com</td>
+</tr>
+<tr>
+<td class="xl67" style="text-align: center;" height="19">Shorr Packaging Corp</td>
+<td class="xl67" style="text-align: center;">trish.clingan@shorr.com</td>
+</tr>
+<tr>
+<td class="xl67" style="text-align: center;" height="19">Valley Pallet Inc</td>
+<td class="xl67" style="text-align: center;">rmeyer@plasolutions.com</td>
+</tr>
+</tbody>
+</table>
+<p><strong><span style="font-size: x-large;"><br /></span></strong></p>
+<p><strong><span style="font-size: x-large;">Refrigeration</span></strong></p>
+<div>
+    <input type="text" id="filterSupplier" onkeyup="filterTable(this)" placeholder="Type the supplier name or email to filter">
+</div>
+<table style="width: 800px; border-color: #000000; border-width: 1px; border-style: solid;" border="1" frame="border" cellspacing="5" cellpadding="0"><colgroup><col width="235" /> <col width="279" /> </colgroup>
+<tbody>
+<tr>
+<td class="xl66" style="text-align: center;" width="235" height="19"><span style="text-decoration: underline; font-size: large;"><strong>Supplier</strong></span></td>
+<td class="xl66" style="text-align: center;" width="279"><span style="text-decoration: underline; font-size: large;"><strong>ETA and Process</strong></span></td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">AC &amp; R Specialists</td>
+<td class="xl66" style="text-align: center;">vbroer@acrspecialists.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Allied Oil &amp; Supply Inc</td>
+<td class="xl66" style="text-align: center;">customermanagement@allied-oil.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Camco Lubricants</td>
+<td class="xl66" style="text-align: center;">danw@camcolubricants.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">CH20 Inc</td>
+<td class="xl66" style="text-align: center;">orders@ch2O.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Chem-Aqua Inc</td>
+<td class="xl66" style="text-align: center;">orders@nch.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">General Air Products</td>
+<td class="xl66" style="text-align: center;">orders@generalairproducts.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Hach Company</td>
+<td class="xl66" style="text-align: center;">orders@hach.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Heat Transfer Laboratories Inc</td>
+<td class="xl66" style="text-align: center;">bgreen@heattransferlabs.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">M&amp;M Refrigeration Inc</td>
+<td class="xl66" style="text-align: center;">shannons@mmsysinc.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">McNeil Industrial Inc</td>
+<td class="xl66" style="text-align: center;">jbarrientos@mcneil-ind.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Motion Industries Inc</td>
+<td class="xl66" style="text-align: center;">Mike.Nath@motion-ind.com</td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Trans-Heat LLC</td>
+<td class="xl66" style="text-align: center;">chad@trans-heat.com</td>
+</tr>
+</tbody>
+</table>
+<p><strong><span style="font-size: x-large;"><br /></span></strong></p>
+<p><strong><span style="font-size: x-large;">Stretch Film</span></strong></p>
+<div>
+    <input type="text" id="filterSupplier" onkeyup="filterTable(this)" placeholder="Type the supplier name or email to filter">
+</div>
+<table style="width: 800px; border-color: #000000; border-width: 1px; border-style: solid;" border="1" frame="border" cellspacing="5" cellpadding="0"><colgroup><col width="267" /> <col width="288" /> </colgroup>
+<tbody>
+<tr>
+<td class="xl66" style="text-align: center;" width="267" height="19"><span style="text-decoration: underline;"><strong><span style="font-size: large;">Supplier</span></strong></span></td>
+<td class="xl66" style="text-align: center;" width="288"><span style="text-decoration: underline;"><strong><span style="font-size: large;">ETA and Process</span></strong></span></td>
+</tr>
+<tr>
+<td class="xl66" style="text-align: center;" height="19">Sigma Supply of N.A. Inc</td>
+<td class="xl66" style="text-align: center;">DStewart@sigmasupply.com</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p><span style="font-size: medium;"><strong style="font-size: 1.5em;"><strong>Warehouse Equipment</strong></strong></span></p>
+<div>
+    <input type="text" id="filterSupplier" onkeyup="filterTable(this)" placeholder="Type the supplier name or email to filter">
+</div>
+<table style="width: 800px; border-color: #000000; border-width: 1px; border-style: solid;" border="1" frame="border" cellspacing="5" cellpadding="0"><colgroup><col width="267" /> <col width="288" /> </colgroup>
+<tbody>
+<tr>
+<td class="xl66" style="text-align: center;" width="267" height="19"><span style="text-decoration: underline;"><strong><span style="font-size: large;">Supplier</span></strong></span></td>
+<td class="xl66" style="text-align: center;" width="288"><span style="text-decoration: underline;"><strong><span style="font-size: large;">ETA and Process</span></strong></span></td>
+</tr>
+<tr>
+<td class="xl67" style="text-align: center;" height="19">Ambrose Packaging Inc</td>
+<td class="xl67" style="text-align: center;">kacasys@ambroseco.com</td>
+</tr>
+<tr>
+<td class="xl67" style="text-align: center;" height="19">Brenntag Great Lakes</td>
+<td class="xl67" style="text-align: center;">Sandra.Vollmer@brenntag.com</td>
+</tr>
+<tr>
+<td class="xl67" style="text-align: center;" height="19">Camco Lubricants</td>
+<td class="xl67" style="text-align: center;">danw@camcolubricants.com</td>
+</tr>
+<tr>
+<td class="xl67" style="text-align: center;" height="19">Cherry's Industrial Equipment Corp</td>
+<td class="xl67" style="text-align: center;">orderprocessing@cherrysind.com</td>
+</tr>
+<tr>
+<td class="xl67" style="text-align: center;" height="19">General Air Products</td>
+<td class="xl67" style="text-align: center;">orders@generalairproducts.com</td>
+</tr>
+<tr>
+<td class="xl67" style="text-align: center;" height="19">Heubel Material Handling Inc</td>
+<td class="xl67" style="text-align: center;">Lineageorders@heubel.com</td>
+</tr>
+<tr>
+<td class="xl67" style="text-align: center;" height="19">Logic Technologies, Inc.</td>
+<td class="xl67" style="text-align: center;">ksmith@logictechnologies.com</td>
+</tr>
+<tr>
+<td class="xl67" style="text-align: center;" height="19">M&amp;M Refrigeration Inc</td>
+<td class="xl67" style="text-align: center;">shannons@mmsysinc.com</td>
+</tr>
+<tr>
+<td class="xl67" style="text-align: center;" height="19">Markem-Imaje Corporation</td>
+<td class="xl67" style="text-align: center;">USOrders@markem-imaje.com</td>
+</tr>
+<tr>
+<td class="xl67" style="text-align: center;" height="19">Northwest Handling Systems, Inc.</td>
+<td class="xl67" style="text-align: center;">joeyst@nwhs.com</td>
+</tr>
+<tr>
+<td class="xl67" style="text-align: center;" height="19">Shorr Packaging Corp</td>
+<td class="xl67" style="text-align: center;">trish.clingan@shorr.com</td>
+</tr>
+<tr>
+<td class="xl67" style="text-align: center;" height="19">Tennant Sales &amp; Service Company</td>
+<td class="xl67" style="text-align: center;">ben.carlson@tennantco.com</td>
+</tr>
+</tbody>
+</table>
+<p><strong style="font-size: 1.5em;"><br /></strong></p>
+<p><strong style="font-size: 1.5em;">Varis Support - FAQ</strong></p>
+<ul>
+<li><span style="font-size: medium;"><span style="font-size: large;">What is Varis?</span>&nbsp;</span></li>
+</ul>
+<p style="padding-left: 60px;"><span style="font-size: medium;"><em style="font-size: medium;">Varis is a digital purchasing platform that makes it easy to purchase the supplies that you need for work.&nbsp;</em></span></p>
+<p style="padding-left: 60px;"><em style="font-size: medium;">Click here to see a slide with more information about Varis:&nbsp;<a href="https://bw-media.s3.amazonaws.com/vuat-lineage-bb24/Need+Help+Content/Varis+-+Phase+1.pptx">Varis | Lineage New Procurement Marketplace</a></em></p>
+<p><span style="font-size: medium;"><em><br /></em></span></p>
+<ul>
+<li><span style="font-size: large;">How do I place an order in Varis?</span></li>
+</ul>
+<p style="padding-left: 60px;">&nbsp;<em><span style="font-size: medium;">Click here to download a guide with instructions on how to place an order in Varis</span></em>: <a href="https://bw-media.s3.amazonaws.com/vuat-lineage-bb24/Need+Help+Content/Varis+Job+Aid+-+(Last+update+Dec+2023).pptx"><span style="font-size: medium;"><em>How to Place an Order in Varis</em></span></a></p>
+<p style="padding-left: 60px;"><em><span style="font-size: medium;">&nbsp;Click here to watch a video on how to place an order in Varis:&nbsp;<a href="https://bw-media.s3.amazonaws.com/vuat-lineage-bb24/Need+Help+Content/Varis+Demo+Video.mp4">Varis | Lineage Demo</a></span></em></p>
+<div>&nbsp;</div>
+<ul>
+<li><span style="font-size: medium;"><span style="font-size: large;">How do I track my ODP orders and create returns?</span>&nbsp;</span></li>
+</ul>
+<p style="padding-left: 60px;"><span style="font-size: medium;">&nbsp;<em>Click here to download a guide with instructions on how to track ODP orders and create returns in Varis: <a href="https://bw-media.s3.amazonaws.com/vuat-lineage-bb24/Need+Help+Content/ODP+Track+Orders+%26+Create+Returns+in+Varis.pptx">How to Track ODP Orders &amp; Create Returns in Varis</a></em></span></p>
+<div>&nbsp;</div>
+<ul>
+<li><span style="font-size: large;">How do I create shopping lists in Varis?&nbsp;</span></li>
+</ul>
+<p style="padding-left: 60px;"><em><span style="font-size: medium;">Click here to download a guide with instructions on how to create a shopping list in Varis: <a href="https://bw-media.s3.amazonaws.com/vuat-lineage-bb24/Need+Help+Content/How+to+Create+Shopping+Lists+in+Varis.pptx">How to Create a Shopping List in Varis</a></span></em></p>
+<p>&nbsp;</p>
+<ul>
+<li><span style="font-size: large;">How do I order an ODP custom item in Varis?</span></li>
+</ul>
+<p style="padding-left: 60px;"><em><span style="font-size: medium;">ODP offers custom print services which include items such as custom stamps, envelopes, stickers, cards, specs, and forms.&nbsp;</span></em></p>
+<p style="padding-left: 60px;"><em><span style="font-size: medium;">Click here to download a guide with instructions on how to order an ODP custom item in Varis: <a href="https://bw-media.s3.amazonaws.com/vuat-lineage-bb24/Need+Help+Content/How+to+Order+ODP+Custom+Items+in+Varis.pptx">How to Order an ODP Custom Item in Varis</a></span></em></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>

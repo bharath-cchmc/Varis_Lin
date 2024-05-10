@@ -1,3 +1,6 @@
+<!DOCTYPE html>
+<html lang="en">
+
 <h1><span style="font-size: xx-large;"><strong>Varis Support Page</strong></span></h1>
 <p><span style="font-size: medium;">Below you will find information to Create Returns &amp; Track Orders as well as an FAQ Section with Training Guides and Videos. If you have any questions not answered in this page, please reach out to <a href="mailto:purchasing@onelineage.com">purchasing@onelineage.com</a></span></p>
 <p>&nbsp;<strong style="font-size: 1.5em;"><span style="font-size: 1.5em;">Create Returns &amp; Track Orders</span></strong></p>
@@ -21,49 +24,67 @@
 </table>
 <p>&nbsp;</p>
 
-<script>
-function filterTable(inputElement) {
-  var filter, table, tr, td, i, txtValue;
-  filter = inputElement.value.toLowerCase();
-  table = inputElement.parentElement.nextElementSibling; // Get the next sibling table element
-  tr = table.getElementsByTagName("tr");
-
-  // Loop through all table rows (except the header row)
-  for (i = 1; i < tr.length; i++) {
-    td = tr[i].getElementsByTagName("td"); // Get all table cells in the current row
-    var rowContainsFilter = false; // Flag to check if the row should be hidden
-
-    // Check both columns for filter match
-    for (var j = 0; j < td.length; j++) {
-      txtValue = td[j].textContent || td[j].innerText;
-      if (txtValue.toLowerCase().indexOf(filter) > -1) {
-        rowContainsFilter = true;
-        break; // Exit inner loop if filter found in a column
-      }
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Supplier name and Contact Email Address</title>
+  <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
     }
 
-    if (rowContainsFilter) {
-      tr[i].style.display = "";
-    } else {
-      tr[i].style.display = "none";
+    th,
+    td {
+      border: 1px solid #dddddd;
+      text-align: center;
+      padding: 8px;
     }
-  }
-}
-</script>
-<!--
-<p><span style="font-size: x-large;"><strong>Building</strong></span></p>
--->
-<div>
-    <input type="text" id="filterSupplier" onkeyup="filterTable(this)" placeholder="Type the supplier name or email to filter">
-</div>
 
-<table style="width: 800px; border-color: #000000; border-width: 1px; border-style: solid;" border="1" frame="border" cellspacing="5" cellpadding="0"><colgroup><col width="213" /> <col width="258" /> <col width="213" /></colgroup>
-<tbody>
-<tr>
-<td class="xl66" style="text-align: center;" width="213" height="19"><strong><span style="text-decoration: underline;"><span style="font-size: large;">Supplier</span></span></strong></td>
-<td class="xl66" style="text-align: center;" width="258"><strong><span style="text-decoration: underline;"><span style="font-size: large;">ETA and Process</span></span></strong></td>
-<td class="xl66" style="text-align: center;" width="258"><strong><span style="text-decoration: underline;"><span style="font-size: large;">Category</span></span></strong></td>
-</tr>
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .pagination a {
+      color: black;
+      float: left;
+      padding: 8px 16px;
+      text-decoration: none;
+    }
+
+    .pagination a.active {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    .pagination a:hover:not(.active) {
+      background-color: #ddd;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h2>Supplier name and Contact Email Address</h2>
+
+  <input type="text" id="myInput" onkeyup="filterTable();" placeholder="Filter by Supplier, ETA, Category...">
+
+  <table id="myTable">
+    <thead>
+      <tr>
+<th class="xl66" style="text-align: center;" width="213" height="19"><strong><span style="text-decoration: underline;"><span style="font-size: large;">Supplier</span></span></strong></th>
+<th class="xl66" style="text-align: center;" width="258"><strong><span style="text-decoration: underline;"><span style="font-size: large;">ETA and Process</span></span></strong></th>
+<th class="xl66" style="text-align: center;" width="258"><strong><span style="text-decoration: underline;"><span style="font-size: large;">Category</span></span></strong></th>
+      </tr>
+    </thead>
+    <tbody>
+
 <tr>
 <td class="xl66" style="text-align: center;" height="19">Arbon Equipment Corp/Rite Hite</td>
 <td class="xl66" style="text-align: center;">rstrunk1@ritehite.com</td>
@@ -817,12 +838,87 @@ function filterTable(inputElement) {
 <td class="xl67" style="text-align: center;">ben.carlson@tennantco.com</td>
 <td class="xl66" style="text-align: center;">Warehouse Equipment</td>
 </tr>
+      </tbody>
+  </table>
+
+  <div class="pagination"></div>
+
+  <script>
+    const rowsPerPage = 10; // Adjust this value to change the number of rows per page
+let currentPage = 1;
+let filteredData = []; // Stores filtered table data
+
+function filterTable() {
+  const input = document.getElementById("myInput");
+  const filter = input.value.toUpperCase();
+  const table = document.getElementById("myTable").getElementsByTagName("tbody")[0];
+  const tr = table.getElementsByTagName("tr");
+
+  filteredData = []; // Reset filtered data for each filter
+
+  for (let i = 0; i < tr.length; i++) {
+    let rowVisible = false;
+    const td = tr[i].getElementsByTagName("td");
+    for (let j = 0; j < td.length; j++) {
+      const txtValue = td[j].textContent || td[j].innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        rowVisible = true;
+        break;
+      }
+    }
+
+    if (rowVisible) {
+      filteredData.push(tr[i]); // Add row to filtered data
+      tr[i].style.display = "";
+    } else {
+      tr[i].style.display = "none";
+    }
+  }
+
+  paginateTable(); // Update pagination after filtering
+}
+
+function paginateTable() {
+  const table = document.getElementById("myTable").getElementsByTagName("tbody")[0];
+  const visibleRows = filteredData.length ? filteredData : table.getElementsByTagName("tr"); // Use filtered data if available
+  const pageCount = Math.ceil(visibleRows.length / rowsPerPage);
+
+  let paginationHTML = "";
+  for (let i = 1; i <= pageCount; i++) {
+    paginationHTML += `<a href="#" onclick="showPage(${i})">${i}</a>`;
+  }
+
+  document.querySelector(".pagination").innerHTML = paginationHTML;
+
+  if (pageCount === 0) {
+    table.style.display = "none"; // Hide table if no results
+  } else {
+    table.style.display = ""; // Show table if there are results
+    showPage(currentPage); // Show the current page
+  }
+}
+
+function showPage(pageNumber) {
+  currentPage = pageNumber;
+  const startIndex = (pageNumber - 1) * rowsPerPage;
+  const endIndex = startIndex + rowsPerPage;
+
+  const visibleRows = filteredData.length ? filteredData : document.getElementById("myTable").getElementsByTagName("tbody")[0].getElementsByTagName("tr");
+  for (let i = 0; i < visibleRows.length; i++) {
+    if (i >= startIndex && i < endIndex) {
+      visibleRows[i].style.display = "";
+    } else {
+      visibleRows[i].style.display = "none";
+    }
+  }
+}
+
+// Call paginateTable to initialize pagination on page load
+paginateTable();
+  </script>
 
 
-</tbody>
-</table>
-
-<p><strong style="font-size: 1.5em;"><br /></strong></p>
+  <p><strong style="font-size: 1.5em;"><br /></strong></p>
 <p><strong style="font-size: 1.5em;">Varis Support - FAQ</strong></p>
 <ul>
 <li><span style="font-size: medium;"><span style="font-size: large;">What is Varis?</span>&nbsp;</span></li>

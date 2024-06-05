@@ -912,62 +912,6 @@ function showPage(pageNumber) {
     }
   }
 }
-
-function sortTable(table, col, reverse = false) {
-  // Get the table body
-  const tbody = table.tBodies[0];
-
-  // Convert rows collection to an array
-  const rows = Array.from(tbody.rows);
-
-  // Sort the rows based on the clicked column
-  rows.sort((rowA, rowB) => {
-    const valueA = rowA.cells[col].textContent.trim();
-    const valueB = rowB.cells[col].textContent.trim();
-
-    // Handle numeric sorting if needed
-    if (!isNaN(valueA) && !isNaN(valueB)) {
-      return (valueA - valueB) * (reverse ? -1 : 1);
-    }
-
-    // Default to string comparison
-    return valueA.localeCompare(valueB) * (reverse ? -1 : 1);
-  });
-
-  // Update the table body with sorted rows
-  tbody.innerHTML = "";
-  rows.forEach(row => tbody.appendChild(row));
-
-  // Update visual cues for sorting direction (optional)
-  updateSortIndicators(table, col, reverse);
-}
-
-// Function to update visual cues for sorting direction (optional)
-function updateSortIndicators(table, col, reverse) {
-  const headers = table.querySelectorAll("th.sortable");
-  headers.forEach(header => header.classList.remove("sort-active", "sort-ascending", "sort-descending"));
-
-  const clickedHeader = headers[col];
-  clickedHeader.classList.add("sort-active");
-  if (reverse) {
-    clickedHeader.classList.add(sortDescending ? "sort-descending" : "sort-ascending");
-  }
-}
-
-// Event Listeners for Sorting
-const table = document.getElementById("myTable");
-table.querySelectorAll("th.sortable").forEach(header => {
-  header.addEventListener("click", () => {
-    const columnIndex = header.cellIndex;
-    let reverse = false;
-
-    // Toggle sort direction if already clicked
-    if (header.classList.contains("sort-active")) {
-      reverse = !header.classList.contains("sort-ascending");
-    }
-    sortTable(table, columnIndex, reverse);
-  });
-});
    
 // Call paginateTable to initialize pagination on page load
 paginateTable();
